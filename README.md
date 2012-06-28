@@ -1,0 +1,3 @@
+# Installing
+
+gem install deviantart
