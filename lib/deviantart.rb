@@ -2,6 +2,7 @@ require 'rubygems'
 require 'open-uri'
 require 'json'
 require 'yaml'
+require 'mechanize'
 
 
 class DeviantClient
@@ -25,8 +26,6 @@ class DeviantClient
   def get_token params
     code = params[:code] ? params[:code] : ''
     url = OAUTH_PATH + 'token?client_id=' + @key + '&client_secret=' + @secret + '&code=' + code + '&grant_type=authorization_code'
-    pp url
-    exit
     begin
 	  page = open(url)
 		data = JSON.parse(page.read)
@@ -49,8 +48,9 @@ class DeviantClient
 	end
   end
   
-  def fetch resource, params={}
+  def fetch resource
     url = API_PATH + resource + '?access_token=' + @access_token
+    #require 'pp'; pp url;
     begin
       page = open(url)
       data = JSON.parse(page.read)
@@ -59,6 +59,18 @@ class DeviantClient
 	  raise 'Trying fetch resource "'+resource+'" but fail.'
     end
   end
+  
+  def post resource, params={}
+    url = API_PATH + resource + '?access_token=' + @access_token
+    browser = Mechanize.new
+    begin
+      page = browser.post(url, params)
+      return JSON.parse(page.body)['available_space']
+    rescue
+		raise 'Trying post data by fail'
+    end
+  end
+  
 
   def placebo
     fetch 'placebo'
@@ -71,6 +83,10 @@ class DeviantClient
   def damntoken
     data = fetch 'user/damntoken'
     return data['damntoken'] 
+  end
+  
+  def stash_space
+    post 'stash/space'
   end
 
 
