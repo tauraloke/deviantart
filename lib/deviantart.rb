@@ -2,7 +2,7 @@ require 'rubygems'
 require 'open-uri'
 require 'json'
 require 'yaml'
-require 'rest_client'
+require 'rest-client'
 
 
 
@@ -73,11 +73,13 @@ class DeviantClient
     end
   end
   
-  def 
-  
 
   def placebo
-    fetch 'placebo'
+	begin
+      fetch 'placebo'
+      rescue
+        refresh
+      end
   end
 
   def whoami

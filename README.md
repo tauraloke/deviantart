@@ -2,7 +2,7 @@ This is unofficial wrapping gem for DeviantART OAuth API.
 
 # Installing
 
-> gem install deviantart
+> gem install deviantart-oauth2
 
 # See also
 
